@@ -1,0 +1,70 @@
+# Tic-Tac-Toe Game
+
+board = [' ' for i in range(9)]
+
+def display():
+    print()
+    print(board[0], '|', board[1], '|', board[2])
+    print('--+---+--')
+    print(board[3], '|', board[4], '|', board[5])
+    print('--+---+--')
+    print(board[6], '|', board[7], '|', board[8])
+    print()
+
+def check_winner(player):
+    combinations = [
+        (0, 1, 2),
+        (3, 4, 5),
+        (6, 7, 8),
+        (0, 3, 6),
+        (1, 4, 7),
+        (2, 5, 8),
+        (0, 4, 8),
+        (2, 4, 6)
+    ]
+
+    for a, b, c in combinations:
+        if board[a] == board[b] == board[c] == player:
+            return True
+
+    return False
+
+def check_draw():
+    return ' ' not in board
+
+
+print("TIC-TAC-TOE")
+print("Player 1 = X")
+print("Player 2 = O")
+
+player = 'X'
+
+while True:
+    display()
+
+    position = int(input("Player " + player + ", enter position (1-9): "))
+
+    if position < 1 or position > 9:
+        print("Invalid position!")
+        continue
+
+    if board[position - 1] != ' ':
+        print("Position already occupied!")
+        continue
+
+    board[position - 1] = player
+
+    if check_winner(player):
+        display()
+        print("Player", player, "wins!")
+        break
+
+    if check_draw():
+        display()
+        print("Game Draw!")
+        break
+
+    if player == 'X':
+        player = 'O'
+    else:
+        player = 'X'
