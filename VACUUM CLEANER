@@ -1,0 +1,43 @@
+# Vacuum Cleaner Agent
+
+roomA = input("Enter status of Room A (Dirty/Clean): ")
+roomB = input("Enter status of Room B (Dirty/Clean): ")
+
+position = input("Enter vacuum position (A/B): ")
+
+print("\nInitial State:")
+print("Room A:", roomA)
+print("Room B:", roomB)
+print("Vacuum Position:", position)
+
+while roomA == "Dirty" or roomB == "Dirty":
+
+    if position == "A":
+
+        if roomA == "Dirty":
+            print("Vacuum is in Room A")
+            print("Room A is Dirty")
+            print("Cleaning Room A...")
+            roomA = "Clean"
+        else:
+            print("Room A is Clean")
+            print("Moving to Room B...")
+            position = "B"
+
+    else:
+
+        if roomB == "Dirty":
+            print("Vacuum is in Room B")
+            print("Room B is Dirty")
+            print("Cleaning Room B...")
+            roomB = "Clean"
+        else:
+            print("Room B is Clean")
+            print("Moving to Room A...")
+            position = "A"
+
+print("\nFinal State:")
+print("Room A:", roomA)
+print("Room B:", roomB)
+print("Both rooms are clean!")
+print("Goal state reached.")
