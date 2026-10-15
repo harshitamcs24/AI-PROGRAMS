@@ -1,0 +1,200 @@
+ 8-Puzzle using DDFS
+def ddfs(start, goal, limit):
+    def dfs(state, depth, path, visited):
+        if state == goal:
+            return path + [state]
+
+        if depth == limit:
+            return None
+
+        visited.add(state)
+        zero = state.index(0)
+        row, col = divmod(zero, 3)
+
+        moves = []
+        if row > 0:
+            moves.append(zero - 3)
+        if row < 2:
+            moves.append(zero + 3)
+        if col > 0:
+            moves.append(zero - 1)
+        if col < 2:
+            moves.append(zero + 1)
+
+        for move in moves:
+            new_state = list(state)
+            new_state[zero], new_state[move] = (
+                new_state[move], new_state[zero]
+            )
+            new_state = tuple(new_state)
+
+            if new_state not in visited:
+                result = dfs(new_state, depth + 1,
+                             path + [state], visited)
+                if result:
+                    return result
+
+        visited.remove(state)
+        return None
+
+    return dfs(tuple(start), 0, [], set())
+
+
+start = [1, 2, 3,
+         4, 0, 6,
+         7, 5, 8]
+
+goal = (1, 2, 3,
+        4, 5, 6,
+        7, 8, 0)
+
+solution = ddfs(start, goal, 10)
+
+if solution:
+    for state in solution:
+        print(state[:3])
+        print(state[3:6])
+        print(state[6:])
+        print()
+else:
+    print("No solution within depth limit")
+
+
+
+    8-Puzzle using Manhattan Distance (A* Search)
+    import heapq
+
+def manhattan(state, goal):
+    distance = 0
+    for i, tile in enumerate(state):
+        if tile != 0:
+            j = goal.index(tile)
+            r1, c1 = divmod(i, 3)
+            r2, c2 = divmod(j, 3)
+            distance += abs(r1-r2) + abs(c1-c2)
+    return distance
+
+
+def astar(start, goal):
+    start, goal = tuple(start), tuple(goal)
+    pq = [(manhattan(start, goal), 0, start, [])]
+    visited = set()
+
+    while pq:
+        f, g, state, path = heapq.heappop(pq)
+
+        if state in visited:
+            continue
+        visited.add(state)
+        path = path + [state]
+
+        if state == goal:
+            return path
+
+        zero = state.index(0)
+        row, col = divmod(zero, 3)
+        moves = []
+
+        if row > 0: moves.append(zero - 3)
+        if row < 2: moves.append(zero + 3)
+        if col > 0: moves.append(zero - 1)
+        if col < 2: moves.append(zero + 1)
+
+        for move in moves:
+            new_state = list(state)
+            new_state[zero], new_state[move] = (
+                new_state[move], new_state[zero]
+            )
+            new_state = tuple(new_state)
+
+            if new_state not in visited:
+                new_g = g + 1
+                new_f = new_g + manhattan(new_state, goal)
+                heapq.heappush(
+                    pq, (new_f, new_g, new_state, path)
+                )
+
+    return None
+
+
+start = [1, 2, 3, 4, 0, 6, 7, 5, 8]
+goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+
+solution = astar(start, goal)
+
+if solution:
+    for state in solution:
+        print(state[:3])
+        print(state[3:6])
+        print(state[6:])
+        print()
+else:
+    print("No solution"
+
+    
+3. 8-Puzzle using Misplaced Tiles (A* Search)
+
+import heapq
+
+def misplaced(state, goal):
+    return sum(
+        1 for i in range(9)
+        if state[i] != 0 and state[i] != goal[i]
+    )
+
+
+def astar(start, goal):
+    start, goal = tuple(start), tuple(goal)
+    pq = [(misplaced(start, goal), 0, start, [])]
+    visited = set()
+
+    while pq:
+        f, g, state, path = heapq.heappop(pq)
+
+        if state in visited:
+            continue
+        visited.add(state)
+        path = path + [state]
+
+        if state == goal:
+            return path
+
+        zero = state.index(0)
+        row, col = divmod(zero, 3)
+        moves = []
+
+        if row > 0: moves.append(zero - 3)
+        if row < 2: moves.append(zero + 3)
+        if col > 0: moves.append(zero - 1)
+        if col < 2: moves.append(zero + 1)
+
+        for move in moves:
+            new_state = list(state)
+            new_state[zero], new_state[move] = (
+                new_state[move], new_state[zero]
+            )
+            new_state = tuple(new_state)
+
+            if new_state not in visited:
+                new_g = g + 1
+                new_f = new_g + misplaced(new_state, goal)
+                heapq.heappush(
+                    pq, (new_f, new_g, new_state, path)
+                )
+
+    return None
+
+
+start = [1, 2, 3, 4, 0, 6, 7, 5, 8]
+goal = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+
+solution = astar(start, goal)
+
+if solution:
+    for state in solution:
+        print(state[:3])
+        print(state[3:6])
+        print(state[6:])
+        print()
+else:
+    print("No solution")
