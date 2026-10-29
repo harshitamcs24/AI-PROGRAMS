@@ -1,0 +1,61 @@
+
+import random
+import math
+
+N = 8
+
+# Calculate the number of attacking pairs
+def heuristic(board):
+    conflicts = 0
+    for i in range(N):
+        for j in range(i + 1, N):
+            if board[i] == board[j] or abs(board[i] - board[j]) == abs(i - j):
+                conflicts += 1
+    return conflicts
+
+# Simulated Annealing algorithm
+def simulated_annealing():
+    board = [random.randint(0, N - 1) for _ in range(N)]
+    temperature = 100.0
+    cooling_rate = 0.99
+
+    while temperature > 0.001:
+        current_cost = heuristic(board)
+
+        if current_cost == 0:
+            return board
+
+        # Generate a neighboring solution
+        new_board = board.copy()
+        col = random.randint(0, N - 1)
+        new_row = random.randint(0, N - 1)
+
+        new_board[col] = new_row
+        new_cost = heuristic(new_board)
+
+        delta = new_cost - current_cost
+
+        # Accept better solutions or sometimes worse solutions
+        if delta < 0 or random.random() < math.exp(-delta / temperature):
+            board = new_board
+
+        # Cool down
+        temperature *= cooling_rate
+
+    return board if heuristic(board) == 0 else None
+
+# Display the solution
+solution = simulated_annealing()
+
+if solution:
+    print("Solution:", solution)
+    print("\nChessboard:")
+    for row in range(N):
+        for col in range(N):
+            if solution[col] == row:
+                print("Q", end=" ")
+            else:
+                print(".", end=" ")
+        print()
+else:
+    print("No solution found. Run the program again.")
